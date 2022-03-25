@@ -1,32 +1,62 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiHide, BiShow, BiLoaderAlt } from 'react-icons/bi';
 import { BsGoogle, BsGithub } from 'react-icons/bs';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import InputWithTags from '../components/InputWithTags';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [registerData, setRegisterData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
+    avatar: '',
+    userType: 'user',
   });
+  const [tags, setTags] = useState([]);
   const [loadingRes, setLoadingRes] = useState(false);
+  const [user, setUser] = useLocalStorage('user');
+  const [token, setToken] = useLocalStorage('token');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user || token) {
+      router.replace('/');
+    }
+  }, []);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    if (registerData.email && registerData.password) {
+    if (
+      registerData.email &&
+      registerData.password &&
+      registerData.name &&
+      registerData.avatar
+    ) {
       try {
         setLoadingRes(true);
+        console.log('register request');
 
-        // TODO: make login request
-        // const res = await axios.post("/auth/login", {
-        //   email: registerData.email,
-        //   password: registerData.password,
-        // });
+        const { name, email, password, avatar, userType } = registerData;
+        const { data } = await apiCall().post('/user/register', {
+          name,
+          email,
+          password,
+          avatar: avatar === '' ? undefined : avatar,
+          userType,
+          tags,
+        });
+        console.log(res);
 
+        setUser(data.user);
+        setToken(data.token);
         setLoadingRes(false);
-        toast.success('Signed successfully');
+        toast.success('Registered successfully');
+        router.push('/');
       } catch (err) {
         setLoadingRes(false);
         toast.error(err.response?.data?.message || 'Something Went Wrong.');
@@ -41,14 +71,55 @@ const RegisterPage = () => {
     }));
   };
 
+  const postAvatarImage = (image) => {
+    console.log(image);
+    setLoadingRes(true);
+    if (image === undefined) {
+      toast.error('Please select a image');
+      setLoadingRes(false);
+      return;
+    }
+    if (
+      image.type === 'image/jpeg' ||
+      image.type === 'image/png' ||
+      image.type === 'image/jpg' ||
+      image.type === 'image/svg'
+    ) {
+      const data = new FormData();
+      data.append('file', image);
+      data.append('upload_preset', 'chat_app');
+      data.append('cloud_name', 'dklj8gnbm');
+      axios('https://api.cloudinary.com/v1_1/dklj8gnbm/image/upload', {
+        method: 'POST',
+        data: data,
+      })
+        .then(({ data }) => {
+          setRegisterData((prev) => ({
+            ...prev,
+            avatar: data.url.toString(),
+          }));
+
+          setLoadingRes(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          console.error(err);
+          setLoadingRes(false);
+        });
+    } else {
+      toast.error('Please select a valid image');
+      setLoadingRes(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-zinc-900 flex flex-col items-start justify-start px-6">
       <header className=" py-8 px-0 sm:px-5">
         <Link href={'/'}>
-          <div>
+          <a>
             <img src="/logo.svg" className="hidden h-10 sm:block" />
             <img src="/logo-small.svg" className="block h-10 sm:hidden" />
-          </div>
+          </a>
         </Link>
       </header>
       <main className="flex flex-1 w-full items-center justify-center pb-14 pt-5 sm:pt-10">
@@ -57,17 +128,48 @@ const RegisterPage = () => {
             Create an Account
           </h1>
           <form onSubmit={onSubmitHandler}>
+            <div className="mb-6 flex items-center justify-between">
+              <label className="block text-gray-300 mb-2" htmlFor="userType">
+                Register as:
+              </label>
+              <div className="flex items-center justify-center gap-5">
+                <div className="flex items-center gap-2">
+                  <label htmlFor="user">User</label>
+                  <input
+                    type="radio"
+                    id="user"
+                    name="userType"
+                    value={'user'}
+                    checked={registerData.userType === 'user' ? 'checked' : ''}
+                    onChange={onChangeHandler}
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label htmlFor="doctor">Doctor</label>
+                  <input
+                    type="radio"
+                    name="userType"
+                    id="doctor"
+                    checked={
+                      registerData.userType === 'doctor' ? 'checked' : ''
+                    }
+                    value={'doctor'}
+                    onChange={onChangeHandler}
+                  />
+                </div>
+              </div>
+            </div>
             <div className="mb-6">
-              <label className="block text-gray-300 mb-2" htmlFor="username">
-                Username:
+              <label className="block text-gray-300 mb-2" htmlFor="name">
+                Name:
               </label>
               <input
                 className="bg-zinc-900 border-none outline-0 outline outline-gray-400 px-3 py-2 rounded w-full placeholder-zinc-700 focus:outline-2"
                 type="text"
-                name="username"
-                id="username"
+                name="name"
+                id="name"
                 required
-                value={registerData.username}
+                value={registerData.name}
                 placeholder="John Doe"
                 autoFocus={true}
                 onChange={onChangeHandler}
@@ -112,6 +214,28 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
+            {registerData.userType === 'doctor' && (
+              <div className="mb-6">
+                <InputWithTags tags={tags} setTags={setTags} />
+              </div>
+            )}
+            <div className="mb-6">
+              <label className="block cursor-pointer">
+                <span className="sr-only">Choose profile photo</span>
+                <input
+                  type="file"
+                  onChange={(e) => postAvatarImage(e.target.files[0])}
+                  className="block w-full text-sm text-slate-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-full file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-violet-50 file:text-violet-700
+                    hover:file:bg-violet-100
+                    cursor-pointer
+                    "
+                />
+              </label>
+            </div>
             <button
               role="form"
               disabled={loadingRes}
@@ -124,21 +248,6 @@ const RegisterPage = () => {
               )}
             </button>
           </form>
-          <div className="flex items-center">
-            <span className="flex-1 w-full h-[0.5px] bg-gray-500"></span>
-            <span className="px-3 text-gray-400">Or Continue with</span>
-            <span className="flex-1 w-full h-[0.5px] bg-gray-500"></span>
-          </div>
-          <div className="flex items-center justify-center gap-3 md:gap-5 mt-5">
-            <button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-200 bg-zinc-900 border border-zinc-700 rounded-md shadow-sm disabled:cursor-wait disabled:opacity-50 hover:bg-opacity-80">
-              <span className="sr-only">Sign in with Google</span>
-              <BsGoogle size={22} />
-            </button>
-            <button className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-200 bg-zinc-900 border border-zinc-700 rounded-md shadow-sm disabled:cursor-wait disabled:opacity-50 hover:bg-opacity-80">
-              <span className="sr-only">Sign in with Github</span>
-              <BsGithub size={22} />
-            </button>
-          </div>
           <div className="mt-8 mb-2 text-gray-300">
             <p className="text-center">
               Already have an Account!
