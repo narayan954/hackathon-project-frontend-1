@@ -46,7 +46,7 @@ const DoctorDetailPage = ({ doctor }) => {
           <hr />
           <div>
             <Calendar onChange={setDateValue} value={dateValue} />
-            <Link href={'/'}>
+            <Link href={'/meet/alksfkjdk'}>
               <button
                 // disabled={loadingRes}
                 className="bg-blue-700 px-5 py-2 w-full rounded-md mt-5 mb-7 text-center disabled:bg-blue-500 hover:bg-blue-800 active:outline outline-2 outline-gray-400"

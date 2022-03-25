@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from 'framer-motion';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
@@ -60,39 +61,43 @@ const SearchPage = ({ doctors }) => {
           </datalist>
         </div>
       </div>
-      <main className="flex items-center justify-center gap-5 flex-wrap pb-10">
-        {doctorList.map((d, i) => (
-          <Link key={i} href={`/doctor/${d._id}`}>
-            <a>
-              <div className="bg-zinc-800 rounded-md p-5 flex items-center w-[35rem] max-w-full gap-4">
-                <img
-                  src={d.avatar}
-                  className="h-20 w-20 rounded-full"
-                  alt={d.name}
-                />
-                <div>
-                  <h3 className="text-2xl text-[#2c97df] mb-2">{d.name}</h3>
-                  <p className="text-base text-gray-300">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Maiores praesentium molestiae reiciendis quae aut rerum
-                    asperiores, itaque impedit consequuntur quam quibusdam
-                    similique debitis.
-                  </p>
-                  <div className="flex items-center justify-start gap-4 flex-wrap my-4">
-                    {d.tags.map((t, i) => (
-                      <div
-                        key={i}
-                        className="bg-orange-600 rounded-full py-1 px-2 cursor-default flex items-center gap-2"
-                      >
-                        <span className="text-sm">{t}</span>
+      <main className="">
+        <AnimatePresence className="flex items-center justify-center gap-5 flex-wrap pb-10">
+          {doctorList.map((d, i) => (
+            <motion.div key={i}>
+              <Link href={`/doctor/${d._id}`}>
+                <a>
+                  <div className="bg-zinc-800 rounded-md p-5 flex items-center w-[35rem] max-w-full gap-4">
+                    <img
+                      src={d.avatar}
+                      className="h-20 w-20 rounded-full"
+                      alt={d.name}
+                    />
+                    <div>
+                      <h3 className="text-2xl text-[#2c97df] mb-2">{d.name}</h3>
+                      <p className="text-base text-gray-300">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Maiores praesentium molestiae reiciendis quae aut rerum
+                        asperiores, itaque impedit consequuntur quam quibusdam
+                        similique debitis.
+                      </p>
+                      <div className="flex items-center justify-start gap-4 flex-wrap my-4">
+                        {d.tags.map((t, i) => (
+                          <div
+                            key={i}
+                            className="bg-orange-600 rounded-full py-1 px-2 cursor-default flex items-center gap-2"
+                          >
+                            <span className="text-sm">{t}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </a>
-          </Link>
-        ))}
+                </a>
+              </Link>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </main>
     </div>
   );
