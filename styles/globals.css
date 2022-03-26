@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.react-calendar,
+.react-calendar div,
+.react-calendar button {
+  margin: auto;
+  background: rgb(12, 12, 12) !important;
+}
+
+button.react-calendar__tile--active {
+  background: #2c97df !important;
+}
+
+.react-calendar__tile:disabled {
+  background: rgb(34, 32, 32) !important;
+}

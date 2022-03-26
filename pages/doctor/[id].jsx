@@ -1,18 +1,51 @@
 import Link from 'next/link';
-import React, { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useCallback, useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css';
+import { BiLoaderAlt } from 'react-icons/bi';
+import { toast } from 'react-toastify';
 import Navbar from '../../components/Navbar';
 import apiCall from '../../utils/http';
 
 export async function getServerSideProps(context) {
-  const { data } = await apiCall().get(`/user/doctors/${context.params.id}`);
+  console.log('i ran');
+  const url = `/user/doctors/${context.params.id}`;
+  const { data } = await apiCall().get(url);
+  console.log(data);
   return {
-    props: { doctor: data.doctor }, // will be passed to the page component as props
+    props: { doctor: data.doctor },
   };
 }
 
 const DoctorDetailPage = ({ doctor }) => {
   const [dateValue, setDateValue] = useState(new Date());
+  const [appointmentSlots, setAppointmentSlots] = useState([]);
+  const [loadingAppointments, setLoadingAppointments] = useState(true);
+  const [selectedSlot, setSelectedSlot] = useState('');
+  const router = useRouter();
+  const isBtnDisabled = selectedSlot === '';
+
+  const getAppointments = useCallback(async () => {
+    try {
+      const { data } = await apiCall().get(
+        `/bookings/${router.query.id}?date=${new Date(
+          dateValue
+        ).getMilliseconds()}`
+      );
+      console.log(data);
+      setLoadingAppointments(false);
+      setAppointmentSlots(data.bookings);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data?.message || 'Something Went Wrong.');
+    }
+  }, [dateValue]);
+
+  useEffect(() => {
+    getAppointments();
+  }, [dateValue]);
+
   return (
     <div className="bg-zinc-900 text-white min-h-screen">
       <Navbar />
@@ -44,18 +77,32 @@ const DoctorDetailPage = ({ doctor }) => {
             </div>
           </div>
           <hr />
-          <div>
-            <Calendar onChange={setDateValue} value={dateValue} />
+          <div className="mt-8 px-5 md:px-20">
+            <Calendar
+              onChange={setDateValue}
+              activeStartDate={dateValue}
+              value={dateValue}
+              maxDate={new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000)}
+              minDate={new Date()}
+            />
+            <div>
+              {loadingAppointments ? (
+                <div className="flex justify-center my-5">
+                  <BiLoaderAlt size={'35px'} className="  animate-spin" />
+                </div>
+              ) : (
+                <div>
+                  {appointmentSlots.map((slot) => (
+                    <div>{slot.time.toString()}</div>
+                  ))}
+                </div>
+              )}
+            </div>
             <Link href={'/meet/alksfkjdk'}>
               <button
-                // disabled={loadingRes}
+                disabled={isBtnDisabled}
                 className="bg-blue-700 px-5 py-2 w-full rounded-md mt-5 mb-7 text-center disabled:bg-blue-500 hover:bg-blue-800 active:outline outline-2 outline-gray-400"
               >
-                {/* {loadingRes ? (
-                  <BiLoaderAlt size={'20px'} className="inline animate-spin" />
-                ) : (
-                  'Sign In'
-                )} */}{' '}
                 Book Appointment
               </button>
             </Link>

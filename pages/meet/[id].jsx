@@ -24,13 +24,7 @@ const MeetingPage = () => {
   return (
     <>
       <div className="w-screen h-screen bg-zinc-100 flex flex-col">
-        <AgoraUIKit
-          //   className="w-full h-full"
-          //   styleProps={{ width: '100%', width: '100%' }}
-          st
-          rtcProps={rtcProps}
-          callbacks={callbacks}
-        />
+        <AgoraUIKit rtcProps={rtcProps} callbacks={callbacks} />
       </div>
     </>
   );

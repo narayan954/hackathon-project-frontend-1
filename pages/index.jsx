@@ -20,9 +20,11 @@ export default function Home() {
               licensed specialist doctors instantly at any time of the day.
             </p>
             <Link href={'/search'}>
-              <button className="border-none outline-none bg-[#2c97df] px-8 py-2 rounded-full text-xl">
-                Consult Now
-              </button>
+              <a>
+                <button className="border-none outline-none bg-[#2c97df] px-8 py-2 rounded-full text-xl">
+                  Consult Now
+                </button>
+              </a>
             </Link>
           </div>
           <div className="flex-1 h-96 w-[75%] sm:h-auto">

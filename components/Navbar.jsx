@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { useState } from 'react';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 const Navbar = () => {
   const [search, setSearch] = useState('');
-  const user = null;
+  const [user] = useLocalStorage('user');
   return (
     <div className="bg-zinc-800 text-white">
       <div className="flex items-center justify-between bg-opacity-95 px-4 sm:px-12 py-3 border-b border-zinc-500 min-h-[69px]">
