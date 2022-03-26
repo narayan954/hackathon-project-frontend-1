@@ -44,12 +44,18 @@ const DoctorDetailPage = ({ doctor }) => {
   }, [dateValue]);
 
   const generateBooking = async () => {
-    const { data } = await apiCall().post('/booking/create', {
-      doctorId: router.query.id,
-      userId: user._id,
-      date: new Date(dateValue).getMilliseconds(),
-      time: '3-4',
-    });
+    try {
+      const { data } = await apiCall().post('/bookings/create', {
+        doctorId: router.query.id,
+        userId: user._id,
+        date: new Date(dateValue).getMilliseconds(),
+        timeSlot: '3-4',
+      });
+      router.push(`/meet/${data.booking._id}`);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.response?.data?.message || 'Something Went Wrong.');
+    }
   };
 
   useEffect(() => {

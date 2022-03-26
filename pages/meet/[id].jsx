@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 // import AgoraUIKit from 'agora-react-uikit';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
 
 const AgoraUIKit = dynamic(() => import('agora-react-uikit'), { ssr: false });
 
 const MeetingPage = () => {
   let isBrowser = typeof window !== undefined;
+  const router = useRouter();
 
   useEffect(() => {
     isBrowser = typeof window !== undefined;
@@ -16,7 +18,7 @@ const MeetingPage = () => {
     channel: 'test123', // your agora channel
   };
   const callbacks = {
-    EndCall: () => console.log('ended'),
+    EndCall: () => router.push('/'),
   };
 
   if (!isBrowser) return null;

@@ -28,7 +28,7 @@ const Navbar = () => {
             </div>
           ) : (
             <div>
-              <div>Appointments</div>
+              <Link href={'/search'}>Search Doctors</Link>
               <div></div>
             </div>
           )}

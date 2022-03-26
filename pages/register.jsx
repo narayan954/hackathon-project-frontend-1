@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import InputWithTags from '../components/InputWithTags';
 import useLocalStorage from '../hooks/useLocalStorage';
+import apiCall from '../utils/http';
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -50,7 +51,7 @@ const RegisterPage = () => {
           userType,
           tags,
         });
-        console.log(res);
+        console.log(data);
 
         setUser(data.user);
         setToken(data.token);
@@ -58,6 +59,7 @@ const RegisterPage = () => {
         toast.success('Registered successfully');
         router.push('/');
       } catch (err) {
+        console.log(err);
         setLoadingRes(false);
         toast.error(err.response?.data?.message || 'Something Went Wrong.');
       }
