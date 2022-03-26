@@ -42,7 +42,6 @@ const InputWithTags = ({ tags, setTags }) => {
         ''
       )}
       <input
-        required
         className="bg-zinc-900 border-none outline-0 outline outline-gray-400 pl-3 pr-8 py-2 rounded w-full placeholder-zinc-700 tracking-wider focus:outline-2"
         placeholder="Eg. Dentist"
         id="tags"

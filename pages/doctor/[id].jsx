@@ -6,13 +6,13 @@ import 'react-calendar/dist/Calendar.css';
 import { BiLoaderAlt } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import Navbar from '../../components/Navbar';
+import useLocalStorage from '../../hooks/useLocalStorage';
 import apiCall from '../../utils/http';
 
 export async function getServerSideProps(context) {
   console.log('i ran');
   const url = `/user/doctors/${context.params.id}`;
   const { data } = await apiCall().get(url);
-  console.log(data);
   return {
     props: { doctor: data.doctor },
   };
@@ -25,6 +25,7 @@ const DoctorDetailPage = ({ doctor }) => {
   const [selectedSlot, setSelectedSlot] = useState('');
   const router = useRouter();
   const isBtnDisabled = selectedSlot === '';
+  const [user] = useLocalStorage('user');
 
   const getAppointments = useCallback(async () => {
     try {
@@ -41,6 +42,15 @@ const DoctorDetailPage = ({ doctor }) => {
       toast.error(err.response?.data?.message || 'Something Went Wrong.');
     }
   }, [dateValue]);
+
+  const generateBooking = async () => {
+    const { data } = await apiCall().post('/booking/create', {
+      doctorId: router.query.id,
+      userId: user._id,
+      date: new Date(dateValue).getMilliseconds(),
+      time: '3-4',
+    });
+  };
 
   useEffect(() => {
     getAppointments();
@@ -98,14 +108,13 @@ const DoctorDetailPage = ({ doctor }) => {
                 </div>
               )}
             </div>
-            <Link href={'/meet/alksfkjdk'}>
-              <button
-                disabled={isBtnDisabled}
-                className="bg-blue-700 px-5 py-2 w-full rounded-md mt-5 mb-7 text-center disabled:bg-blue-500 hover:bg-blue-800 active:outline outline-2 outline-gray-400"
-              >
-                Book Appointment
-              </button>
-            </Link>
+            <button
+              // disabled={isBtnDisabled}
+              onClick={generateBooking}
+              className="bg-blue-700 px-5 py-2 w-full rounded-md mt-5 mb-7 text-center disabled:bg-blue-500 hover:bg-blue-800 active:outline outline-2 outline-gray-400"
+            >
+              Book Appointment
+            </button>
           </div>
         </div>
       </main>
