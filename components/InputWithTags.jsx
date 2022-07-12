@@ -1,15 +1,15 @@
-import { useState } from 'react';
-import { MdClear } from 'react-icons/md';
-import { doctorTypes } from '../assets/doctorTypes';
+import { useState } from "react";
+import { MdClear } from "react-icons/md";
+import { doctorTypes } from "../assets/doctorTypes";
 
 const InputWithTags = ({ tags, setTags }) => {
   const onInputChange = (e) => {
     if (
-      e.nativeEvent.inputType == 'insertReplacementText' ||
+      e.nativeEvent.inputType == "insertReplacementText" ||
       e.nativeEvent.inputType == null
     ) {
       setTags((prev) => [...new Set([...prev, e.target.value])]);
-      setTimeout(() => (e.target.value = ''), 100);
+      setTimeout(() => (e.target.value = ""), 100);
     }
   };
 
@@ -39,7 +39,7 @@ const InputWithTags = ({ tags, setTags }) => {
           ))}
         </div>
       ) : (
-        ''
+        ""
       )}
       <input
         className="bg-zinc-900 border-none outline-0 outline outline-gray-400 pl-3 pr-8 py-2 rounded w-full placeholder-zinc-700 tracking-wider focus:outline-2"

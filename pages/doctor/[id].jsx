@@ -1,16 +1,16 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
-import Calendar from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
-import { BiLoaderAlt } from 'react-icons/bi';
-import { toast } from 'react-toastify';
-import Navbar from '../../components/Navbar';
-import useLocalStorage from '../../hooks/useLocalStorage';
-import apiCall from '../../utils/http';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
+import { BiLoaderAlt } from "react-icons/bi";
+import { toast } from "react-toastify";
+import Navbar from "../../components/Navbar";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import apiCall from "../../utils/http";
 
 export async function getServerSideProps(context) {
-  console.log('i ran');
+  console.log("i ran");
   const url = `/user/doctors/${context.params.id}`;
   const { data } = await apiCall().get(url);
   return {
@@ -22,10 +22,10 @@ const DoctorDetailPage = ({ doctor }) => {
   const [dateValue, setDateValue] = useState(new Date());
   const [appointmentSlots, setAppointmentSlots] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
-  const [selectedSlot, setSelectedSlot] = useState('');
+  const [selectedSlot, setSelectedSlot] = useState("");
   const router = useRouter();
-  const isBtnDisabled = selectedSlot === '';
-  const [user] = useLocalStorage('user');
+  const isBtnDisabled = selectedSlot === "";
+  const [user] = useLocalStorage("user");
 
   const getAppointments = useCallback(async () => {
     try {
@@ -39,22 +39,22 @@ const DoctorDetailPage = ({ doctor }) => {
       setAppointmentSlots(data.bookings);
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.data?.message || 'Something Went Wrong.');
+      toast.error(err.response?.data?.message || "Something Went Wrong.");
     }
   }, [dateValue]);
 
   const generateBooking = async () => {
     try {
-      const { data } = await apiCall().post('/bookings/create', {
+      const { data } = await apiCall().post("/bookings/create", {
         doctorId: router.query.id,
         userId: user._id,
         date: new Date(dateValue).getMilliseconds(),
-        timeSlot: '3-4',
+        timeSlot: "3-4",
       });
       router.push(`/meet/${data.booking._id}`);
     } catch (err) {
       console.log(err);
-      toast.error(err.response?.data?.message || 'Something Went Wrong.');
+      toast.error(err.response?.data?.message || "Something Went Wrong.");
     }
   };
 
@@ -104,7 +104,7 @@ const DoctorDetailPage = ({ doctor }) => {
             <div>
               {loadingAppointments ? (
                 <div className="flex justify-center my-5">
-                  <BiLoaderAlt size={'35px'} className="  animate-spin" />
+                  <BiLoaderAlt size="35px" className="  animate-spin" />
                 </div>
               ) : (
                 <div>
