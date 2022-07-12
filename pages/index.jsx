@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import Navbar from '../components/Navbar';
+import Link from "next/link";
+import Navbar from "../components/Navbar";
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
               Doctor-on-Demand enables you to speak with experienced and
               licensed specialist doctors instantly at any time of the day.
             </p>
-            <Link href={'/search'}>
+            <Link href="/search">
               <a>
                 <button className="border-none outline-none bg-[#2c97df] px-8 py-2 rounded-full text-xl">
                   Consult Now

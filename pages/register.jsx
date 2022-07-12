@@ -1,32 +1,32 @@
-import { useEffect, useState } from 'react';
-import { BiHide, BiShow, BiLoaderAlt } from 'react-icons/bi';
-import { BsGoogle, BsGithub } from 'react-icons/bs';
-import Link from 'next/link';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import InputWithTags from '../components/InputWithTags';
-import useLocalStorage from '../hooks/useLocalStorage';
-import apiCall from '../utils/http';
+import { useEffect, useState } from "react";
+import { BiHide, BiShow, BiLoaderAlt } from "react-icons/bi";
+import { BsGoogle, BsGithub } from "react-icons/bs";
+import Link from "next/link";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useRouter } from "next/router";
+import InputWithTags from "../components/InputWithTags";
+import useLocalStorage from "../hooks/useLocalStorage";
+import apiCall from "../utils/http";
 
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [registerData, setRegisterData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    avatar: '',
-    userType: 'user',
+    name: "",
+    email: "",
+    password: "",
+    avatar: "",
+    userType: "user",
   });
   const [tags, setTags] = useState([]);
   const [loadingRes, setLoadingRes] = useState(false);
-  const [user, setUser] = useLocalStorage('user');
-  const [token, setToken] = useLocalStorage('token');
+  const [user, setUser] = useLocalStorage("user");
+  const [token, setToken] = useLocalStorage("token");
   const router = useRouter();
 
   useEffect(() => {
     if (user || token) {
-      router.replace('/');
+      router.replace("/");
     }
   }, []);
 
@@ -40,14 +40,14 @@ const RegisterPage = () => {
     ) {
       try {
         setLoadingRes(true);
-        console.log('register request');
+        console.log("register request");
 
         const { name, email, password, avatar, userType } = registerData;
-        const { data } = await apiCall().post('/user/register', {
+        const { data } = await apiCall().post("/user/register", {
           name,
           email,
           password,
-          avatar: avatar === '' ? undefined : avatar,
+          avatar: avatar === "" ? undefined : avatar,
           userType,
           tags,
         });
@@ -56,12 +56,12 @@ const RegisterPage = () => {
         setUser(data.user);
         setToken(data.token);
         setLoadingRes(false);
-        toast.success('Registered successfully');
-        router.push('/');
+        toast.success("Registered successfully");
+        router.push("/");
       } catch (err) {
         console.log(err);
         setLoadingRes(false);
-        toast.error(err.response?.data?.message || 'Something Went Wrong.');
+        toast.error(err.response?.data?.message || "Something Went Wrong.");
       }
     }
   };
@@ -77,23 +77,23 @@ const RegisterPage = () => {
     console.log(image);
     setLoadingRes(true);
     if (image === undefined) {
-      toast.error('Please select a image');
+      toast.error("Please select a image");
       setLoadingRes(false);
       return;
     }
     if (
-      image.type === 'image/jpeg' ||
-      image.type === 'image/png' ||
-      image.type === 'image/jpg' ||
-      image.type === 'image/svg'
+      image.type === "image/jpeg" ||
+      image.type === "image/png" ||
+      image.type === "image/jpg" ||
+      image.type === "image/svg"
     ) {
       const data = new FormData();
-      data.append('file', image);
-      data.append('upload_preset', 'chat_app');
-      data.append('cloud_name', 'dklj8gnbm');
-      axios('https://api.cloudinary.com/v1_1/dklj8gnbm/image/upload', {
-        method: 'POST',
-        data: data,
+      data.append("file", image);
+      data.append("upload_preset", "chat_app");
+      data.append("cloud_name", "dklj8gnbm");
+      axios("https://api.cloudinary.com/v1_1/dklj8gnbm/image/upload", {
+        method: "POST",
+        data,
       })
         .then(({ data }) => {
           setRegisterData((prev) => ({
@@ -109,7 +109,7 @@ const RegisterPage = () => {
           setLoadingRes(false);
         });
     } else {
-      toast.error('Please select a valid image');
+      toast.error("Please select a valid image");
       setLoadingRes(false);
     }
   };
@@ -117,7 +117,7 @@ const RegisterPage = () => {
   return (
     <div className="min-h-screen bg-zinc-900 flex flex-col items-start justify-start px-6">
       <header className=" py-8 px-0 sm:px-5">
-        <Link href={'/'}>
+        <Link href="/">
           <a>
             <img src="/logo.svg" className="hidden h-10 sm:block" />
             <img src="/logo-small.svg" className="block h-10 sm:hidden" />
@@ -141,8 +141,8 @@ const RegisterPage = () => {
                     type="radio"
                     id="user"
                     name="userType"
-                    value={'user'}
-                    checked={registerData.userType === 'user' ? 'checked' : ''}
+                    value="user"
+                    checked={registerData.userType === "user" ? "checked" : ""}
                     onChange={onChangeHandler}
                   />
                 </div>
@@ -153,9 +153,9 @@ const RegisterPage = () => {
                     name="userType"
                     id="doctor"
                     checked={
-                      registerData.userType === 'doctor' ? 'checked' : ''
+                      registerData.userType === "doctor" ? "checked" : ""
                     }
-                    value={'doctor'}
+                    value="doctor"
                     onChange={onChangeHandler}
                   />
                 </div>
@@ -173,7 +173,7 @@ const RegisterPage = () => {
                 required
                 value={registerData.name}
                 placeholder="John Doe"
-                autoFocus={true}
+                autoFocus
                 onChange={onChangeHandler}
               />
             </div>
@@ -199,7 +199,7 @@ const RegisterPage = () => {
               <div className="relative ">
                 <input
                   className="bg-zinc-900 border-none outline-0 outline outline-gray-400 pl-3 pr-8 py-2 rounded w-full placeholder-zinc-700 tracking-wider focus:outline-2"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   id="pasword"
                   name="password"
                   required
@@ -216,7 +216,7 @@ const RegisterPage = () => {
                 </div>
               </div>
             </div>
-            {registerData.userType === 'doctor' && (
+            {registerData.userType === "doctor" && (
               <div className="mb-6">
                 <InputWithTags tags={tags} setTags={setTags} />
               </div>
@@ -244,16 +244,16 @@ const RegisterPage = () => {
               className="bg-blue-700 px-5 py-2 w-full rounded-md mt-5 mb-7 text-center disabled:bg-blue-500 hover:bg-blue-800 active:outline outline-2 outline-gray-400"
             >
               {loadingRes ? (
-                <BiLoaderAlt size={'20px'} className="inline animate-spin" />
+                <BiLoaderAlt size="20px" className="inline animate-spin" />
               ) : (
-                'Register'
+                "Register"
               )}
             </button>
           </form>
           <div className="mt-8 mb-2 text-gray-300">
             <p className="text-center">
               Already have an Account!
-              <Link href={'/login'}>
+              <Link href="/login">
                 <a className="text-blue-500 font-semibold mx-2">Login Here</a>
               </Link>
             </p>

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const BASE_KEY = 'doctor_on_demand';
+const BASE_KEY = "doctor_on_demand";
 
 const useLocalStorage = (key, initialValue) => {
   const localKey = BASE_KEY + key;
   const [storedValue, setStoredValue] = useState(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === "undefined") {
       return initialValue;
     }
     const item = window.localStorage.getItem(localKey);
