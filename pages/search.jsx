@@ -19,7 +19,7 @@ const SearchPage = ({ doctors }) => {
   const onInputChange = (e) => {
     if (
       e.nativeEvent.inputType == 'insertReplacementText' ||
-      e.nativeEvent.inputType == null
+      e.nativeEvent.inputType === null
     ) {
       setDoctorsList((prev) =>
         prev.filter((d) => d.tags.includes(e.target.value))

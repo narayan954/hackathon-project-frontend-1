@@ -6,7 +6,7 @@ const InputWithTags = ({ tags, setTags }) => {
   const onInputChange = (e) => {
     if (
       e.nativeEvent.inputType == 'insertReplacementText' ||
-      e.nativeEvent.inputType == null
+      e.nativeEvent.inputType === null
     ) {
       setTags((prev) => [...new Set([...prev, e.target.value])]);
       setTimeout(() => (e.target.value = ''), 100);
