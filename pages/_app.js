@@ -12,7 +12,7 @@ function MyApp({ Component, pageProps }) {
       <Provider store={store}>
         <Head>
           <title>Doctor on Demand</title>
-          <meta http-equiv="X-UA-Compatible" content="IE=7" />
+          <meta httpEquiv="X-UA-Compatible" content="IE=7" />
           <meta
             name="description"
             content="Consult a big city doctor instantly on call, 24x7.
