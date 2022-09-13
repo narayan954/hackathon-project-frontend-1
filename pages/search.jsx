@@ -1,13 +1,13 @@
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { BsSearch } from 'react-icons/bs';
-import { MdClear } from 'react-icons/md';
-import { doctorTypes } from '../assets/doctorTypes';
-import Navbar from '../components/Navbar';
-import apiCall from '../utils/http';
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BsSearch } from "react-icons/bs";
+import { MdClear } from "react-icons/md";
+import { doctorTypes } from "../assets/doctorTypes";
+import Navbar from "../components/Navbar";
+import apiCall from "../utils/http";
 
 export async function getServerSideProps(context) {
-  const { data } = await apiCall().get('/user/doctors');
+  const { data } = await apiCall().get("/user/doctors");
   return {
     props: { doctors: data.doctors }, // will be passed to the page component as props
   };
@@ -18,8 +18,8 @@ const SearchPage = ({ doctors }) => {
 
   const onInputChange = (e) => {
     if (
-      e.nativeEvent.inputType == 'insertReplacementText' ||
-      e.nativeEvent.inputType == null
+      e.nativeEvent.inputType == "insertReplacementText" ||
+      e.nativeEvent.inputType === null
     ) {
       setDoctorsList((prev) =>
         prev.filter((d) => d.tags.includes(e.target.value))
@@ -27,7 +27,7 @@ const SearchPage = ({ doctors }) => {
       //   setTimeout(() => (e.target.value = ''), 100);
     }
 
-    if (e.target.value === '') {
+    if (e.target.value === "") {
       setDoctorsList(doctors);
       //   [].includes;
     }
@@ -44,10 +44,10 @@ const SearchPage = ({ doctors }) => {
         />
         <div className="relative w-full">
           <input
-            type={'text'}
+            type="text"
             placeholder="Search for doctors with specific specialization"
             list="types-list"
-            defaultValue={''}
+            defaultValue=""
             onChange={onInputChange}
             className="bg-zinc-800 border-none outline-0 outline outline-gray-400 pl-3 pr-3 py-2 rounded-r w-full placeholder-zinc-700 focus:outline-2"
           />
