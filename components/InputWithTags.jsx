@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { MdClear } from "react-icons/md";
 import { doctorTypes } from "../assets/doctorTypes";
 

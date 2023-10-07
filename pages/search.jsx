@@ -1,10 +1,11 @@
-import Link from "next/link";
 import { useEffect, useState } from "react";
+
 import { BsSearch } from "react-icons/bs";
+import Link from "next/link";
 import { MdClear } from "react-icons/md";
-import { doctorTypes } from "../assets/doctorTypes";
 import Navbar from "../components/Navbar";
 import apiCall from "../utils/http";
+import { doctorTypes } from "../assets/doctorTypes";
 
 export async function getServerSideProps(context) {
   const { data } = await apiCall().get("/user/doctors");

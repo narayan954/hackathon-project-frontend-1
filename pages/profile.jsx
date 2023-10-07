@@ -1,6 +1,8 @@
-import {} from 'react';
-import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
-import Navbar from '../components/Navbar';
+import {} from "react";
+
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
+
+import Navbar from "../components/Navbar";
 
 const ProfilePage = () => {
   return (
@@ -8,7 +10,7 @@ const ProfilePage = () => {
       <Navbar />
       <main className="py-10">
         <Tabs variant="soft-rounded" colorScheme="facebook">
-          <TabList justifyContent={'center'} flexWrap={'wrap'} gap={5}>
+          <TabList justifyContent={"center"} flexWrap={"wrap"} gap={5}>
             <Tab>Profile Details</Tab>
             <Tab>Upcoming Appointments</Tab>
             <Tab>Appointment History</Tab>
